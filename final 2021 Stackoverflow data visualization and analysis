@@ -7,33 +7,33 @@ The objective is to uncover trends and patterns within the data and provide mean
 import pandas as pd
 
 # Loading the survey results data
-df = pd.read_csv('data/survey_results_public.csv')
+df = pd.read_csv('survey_results_public.csv')
 
 # Loading the survey schema data
-df_schema = pd.read_csv('data/survey_results_schema.csv', index_col='qname')
+df_schema = pd.read_csv('survey_results_schema.csv', index_col='qname')
 
 # Exploring the data
 
 # Checking the shape and info of the data
-df.shape
-df.info()
+print(df.shape)
+print(df.info())
 
 # Setting display options for easier data exploration
 pd.set_option('display.max_columns', 48)
 pd.set_option('display.max_rows', 48)
 
 # Checking the column names
-df.columns
+print('columns:',df.columns)
 
 # Filtering for full-time employed employees
 employment_full_time = (df['Employment'].str.contains('full-time', na=False))
-df.loc[employment_full_time]['Employment']
+print(df.loc[employment_full_time]['Employment'])
 
 # Reading the question for the 'Employment' column
-df_schema.loc['Employment', 'question']
+print(df_schema.loc['Employment', 'question'])
 
 # Filtering for people with 5 years and above of coding experience
-df_schema.loc['YearsCode', 'question']
+print(df_schema.loc['YearsCode', 'question'])
 df['YearsCode'].unique()
 df['YearsCode'].replace(['Less than 1 year', 'More than 50 years'], [0, 51], inplace=True)
 df['YearsCode'] = df['YearsCode'].astype(float)
@@ -77,19 +77,20 @@ updated_df.to_csv('The_question_answer!.txt', sep='\t')
 # Additional analysis (testing knowledge)
 
 # Loading the survey results data with 'ResponseId' as the index
-df = pd.read_csv('data/survey_results_public.csv', index_col='ResponseId')
+#df = pd.read_csv('survey_results_public.csv', index_col='ResponseId')
 df.loc[0:3,'MainBranch':'Country']
-filt_kenya = df_['Country'] == 'Kenya'
+filt_kenya = df['Country'] == 'Kenya'
 
 # Grouping and working with groups
-country_group = df_.groupby(['Country'])
+country_group = df.groupby(['Country'])
 df_schema.loc['OpSys', 'question']
 
 # Finding how different countries use different operating systems
 country_group[['OpSys']].value_counts().head(48)
 df['OpSys'].value_counts()
 df['OpSys'].value_counts(normalize=True) * 100
-country_group['OpSys'].value_counts(normalize=True).loc['Kenya']
+operating_system = country_group['OpSys'].value_counts(normalize=True).loc['Kenya']
+operating_system.to_csv('operating_sytems.csv')
 #visualizing the data
 import matplotlib.pyplot as plt
 data = pd.read_csv('operating_sytems.csv')
@@ -112,7 +113,7 @@ country_group['CompTotal'].agg(['median', 'mean']).loc['Kenya']
 
 # Finding the number of people in Kenya who know Python
 df.loc[filt_kenya]['LanguageHaveWorkedWith'].str.contains('Python')
-kenya_python = df_.loc[filt_kenya]['LanguageHaveWorkedWith'].str.contains('Python')
+kenya_python = df.loc[filt_kenya]['LanguageHaveWorkedWith'].str.contains('Python')
 kenya_python.sum()
 
 # Finding the percentage of people in each country who know Python
@@ -166,7 +167,7 @@ plt.barh(programming_lang, num_people)
 plt.title('top 15 programming laguages by popularity')
 plt.xlabel('Number of Users/Popularity')
 plt.tight_layout()
-plt.savefig('/Users/mac/Desktop/matplotlib_fig/2021_graph_of_programming.png')
+plt.savefig('/Users/mac/Desktop/2021_graph_of_programming.png')
 plt.show()
 #pie chart of the top 5 programming languages
 plt.style.use('ggplot')
@@ -212,4 +213,3 @@ Conclusion:
                   ANALYSIS DONE BY JAMES NYAGA
                      EMAIL: nyagajames1420@gmail.com
 """
-
